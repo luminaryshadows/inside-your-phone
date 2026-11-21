@@ -6,7 +6,9 @@
   const keys = ['start', ...chapters.slice(1).map(section => section.id)];
   // Native anchors also work before the chapter router starts.
   document.querySelectorAll('a[data-chapter-link]').forEach(link => {
+    if (link.id === 'challengeInspect') return;
     const url = new URL(location.href);
+    url.searchParams.delete('tap');
     url.hash = '';
     url.searchParams.set('chapter', link.dataset.chapterLink);
     link.href = url.href;
@@ -40,16 +42,28 @@
   story.querySelectorAll('.chapter, .workspace, .tapLesson, .lesson').forEach(el => observer.observe(el));
 
   function chapterFrom(url) {
+    if (url.searchParams.get('chapter') === 'signal' && url.searchParams.has('tap')) return story.querySelector('#samples');
     const key = url.hash.startsWith('#inspect/') ? 'anatomy' : url.hash.slice(1) || url.searchParams.get('chapter');
     return chapters[keys.indexOf(key)] || (url.hash && document.getElementById(url.hash.slice(1))) || chapters[0];
   }
 
   function positionChapter(url, focus) {
     const section = chapterFrom(url);
+    if (section.id === 'samples') {
+      const rawTilt = url.searchParams.get('tap');
+      if (rawTilt !== null && /^([1-8]?[0-9]|90)$/.test(rawTilt)) {
+        takeSignalControl();
+        for (const [id, value] of Object.entries({ gap: 1, angle: rawTilt, turns: 5, noise: 0, packet: '1010' })) {
+          document.getElementById(id).value = value;
+        }
+        drawSignal();
+      }
+      section.open = true;
+    }
     if (section === chapters[0]) window.scrollTo(0, 0);
     else section.scrollIntoView({ block: 'start', behavior: 'instant' });
     if (focus) {
-      const title = section.querySelector('h1, h2') || section;
+      const title = section.querySelector('h1, h2, summary') || section;
       title.tabIndex = -1;
       title.focus({ preventScroll: true });
     }
@@ -84,7 +98,7 @@
       },
       beforeEnter({ next }) {
         next.container.replaceChildren(story);
-        positionChapter(new URL(next.url.href), true);
+        positionChapter(new URL(location.href), true);
       },
       enter({ next }) {
         if (!reducedMotion.matches) return animate(next.container, { opacity: 0 }, {

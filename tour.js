@@ -101,7 +101,7 @@ function Tour() {
       if (!window.labScenes) poster.src = 'studio-'+stop.image+'.webp';
       poster.alt = stop.alt;
       const [chapter,label]=experiments[index];
-      const url=new URL(location.href);url.hash='';url.searchParams.set('chapter',chapter);
+      const url=new URL(location.href);url.hash='';url.searchParams.delete('tap');url.searchParams.set('chapter',chapter);
       experimentLink.dataset.chapterLink=chapter;experimentLink.href=url.href;
       experimentLink.firstChild.textContent=label+' ';
       setActive(index);
