@@ -2,7 +2,9 @@
 
 A visitor holds a simulated phone one centimetre above a reader, turns it edge-on, and sees its induced peak voltage fall from 1.43 V to approximately zero. The phone then tries to recover the four bits the reader sent. Rotating the loop back restores the signal. [Open the live site](https://luminaryshadows.github.io/inside-your-phone/).
 
-The opening hardware tour follows the OLED display, rear cameras, NFC antenna, logic board and lithium-ion cell. A React component and GSAP ScrollTrigger tie the captions and Three.js model to scroll progress. Choose any part directly, or skip to the tap experiment. Reduced-motion and short-screen layouts use the part buttons. During the pinned tour, a canvas scrubs 121 rendered poses, packed six per WebP strip. Dragging switches to the live Three.js view when available. The short-screen and reduced-motion layouts also have stills of all five parts.
+Choose **Break the signal**, then **Inspect the samples** to see the voltages behind the failed tap. Set the coil tilt to 60° to see the peak fall to half its face-to-face value.
+
+The hardware tour follows the OLED display, rear cameras, NFC antenna, logic board and lithium-ion cell. A React component and GSAP ScrollTrigger tie the captions and Three.js model to scroll progress. Choose any part directly, or skip to the tap experiment. Reduced-motion and short-screen layouts use the part buttons. During the pinned tour, a canvas scrubs 121 rendered poses, packed six per WebP strip. Dragging switches to the live Three.js view when available. The short-screen and reduced-motion layouts also have stills of all five parts.
 
 Scroll through the tap experiment, signal lab, teardown and payment trail in order. Chapter links and field notes are available in the footer. Barba handles chapter navigation, while the mounted simulations keep their settings and progress during the visit. Visitors who prefer reduced motion get immediate transitions. [Barba.js](https://github.com/barbajs/barba).
 

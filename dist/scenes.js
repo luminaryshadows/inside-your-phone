@@ -143,7 +143,7 @@ function mount(renderer,studioRenderer) {
   function invalidate(view){dirty.add(view);if(!pending)pending=requestAnimationFrame(frame)}
   const visibility=new IntersectionObserver(entries=>{for(const e of entries){const view=views.get(e.target);view.visible=e.isIntersecting;if(view.visible)invalidate(view)}},{rootMargin:'80px'});
   const resize=new ResizeObserver(entries=>entries.forEach(e=>invalidate(views.get(e.target))));
-  function view(id,name,{bg,span,minWidth,target,eye,guided=false}){
+  function view(id,name,{bg,span,minWidth,target,eye,guided=false,passive=false}){
     const canvas=document.getElementById(id);
     canvas.hidden=false;canvas.classList.add('orbitCanvas');canvas.tabIndex=0;
     canvas.setAttribute('aria-label',name+'. Drag to orbit, use arrow keys to rotate, plus and minus to zoom, Home to reset.');
@@ -157,6 +157,10 @@ function mount(renderer,studioRenderer) {
     const direct=guided?studioRenderer:null;
     const v={canvas,camera,scene,span,minWidth,direct,visible:false,refresh:()=>invalidate(v)};
     views.set(canvas,v);visibility.observe(canvas);resize.observe(canvas);
+    if(passive){
+      canvas.removeAttribute('tabindex');canvas.removeAttribute('aria-label');canvas.classList.remove('orbitCanvas');
+      return v;
+    }
     if(guided){
       canvas.setAttribute('aria-label','Phone hardware tour. Drag sideways or use the arrow keys to turn the phone. Home resets your rotation.');
       return v;
@@ -235,6 +239,20 @@ function mount(renderer,studioRenderer) {
     if(i===1){antenna(g,1.70,3.10,.067)}
     return g;
   });
+  const demo=view('challengePhone','Phone coil and reader',{bg:0x080808,span:6.75,minWidth:6.3,target:V(-.26,1.93,0),eye:V(4.4,4.2,6),passive:true});
+  const reader=terminal();reader.scale.setScalar(.98);demo.scene.add(reader);
+  const cutaway=new T.Group();demo.scene.add(cutaway);
+  const frameLayer=layers[3].clone(),boardLayer=layers[2].clone(),coilLayer=layers[1].clone();
+  frameLayer.position.y=-.21;boardLayer.position.y=.04;coilLayer.position.y=.32;
+  const cover=layers[0].clone();
+  cover.rotation.z=-1.12;cover.position.set(-1.48,1.48,-.26);
+  cutaway.add(cover,frameLayer,boardLayer,coilLayer);cutaway.scale.setScalar(.81);
+  function challenge(angle){
+    const t=angle*Math.PI/180;
+    cutaway.rotation.z=-t;cutaway.position.set(0,1.86+.24*Math.sin(t),-.42);
+    demo.refresh();
+  }
+  challenge(Number(document.getElementById('challengeAngle').value));
   const stage=view('studioPhone','Studio phone',{bg:0x080808,span:5.75,minWidth:3.94,target:V(0,0,0),eye:V(0,9,1.8),guided:true});
   const studio=buildStudio(stage,layers,box);
   studio(Number(stage.canvas.dataset.progress || 0));
@@ -305,7 +323,7 @@ function mount(renderer,studioRenderer) {
     ring.position.copy(locations[current]);ring.position.y=-.095;pay.refresh();
   }
   for(const device of [renderer,studioRenderer].filter(Boolean))device.domElement.addEventListener('webglcontextrestored',()=>views.forEach(v=>v.refresh()));
-  return {studio,signal,teardown,sharing,payment,resetTeardown:()=>anatomy.controls.reset()};
+  return {challenge,studio,signal,teardown,sharing,payment,resetTeardown:()=>anatomy.controls.reset()};
 }
 
 let renderer;

@@ -108,6 +108,7 @@ typography is part of how the mechanism is read.
 `dist/physics.js` (transmitter model and slot envelopes), `dist/receiver.js` (calibration, threshold
 and per-bit decision), `dist/app.js` (payment: HMAC signing, issuer check, counter reuse),
 `dist/model.js` and `dist/scenes.js` (procedural phone, field lines, payment route),
-`dist/inspector.js`, `dist/lessons.js`, `dist/tour.js`, `dist/motion.js`, `dist/tap-figure.js`,
-`dist/phone-materials.js`, `dist/studio-model.js`, plus `dist/style.css`, `dist/index.html` and the
-121-pose turntable strips rendered for this project.
+`dist/inspector.js`, `dist/lessons.js`, `dist/tour.js`, `dist/first-tap.js`, `dist/motion.js`,
+`dist/tap-figure.js`, `dist/phone-materials.js`, `dist/studio-model.js`, plus `dist/style.css`,
+`dist/index.html`, the `tap-*.webp` opening stills and the 121-pose turntable strips rendered for
+this project.
