@@ -1,0 +1,10 @@
+# macOS
+.DS_Store
+._*
+.AppleDouble
+
+# Local tooling
+node_modules/
+.openai/
+.venv/
+*.log
